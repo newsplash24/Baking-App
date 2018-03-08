@@ -59,8 +59,8 @@ public class RecipesHomeActivityDetailFragment extends Fragment implements View.
 
     private SimpleExoPlayer mExoPlayer;
 //    private SimpleExoPlayerView mPlayerView;
-    private static MediaSessionCompat mMediaSession;
-    private PlaybackStateCompat.Builder mStateBuilder;
+//    private static MediaSessionCompat mMediaSession;
+//    private PlaybackStateCompat.Builder mStateBuilder;
     @BindView(R.id.noVideoTxt)
     TextView noVideoTv;
     @BindView(R.id.playerView)
@@ -122,7 +122,7 @@ public class RecipesHomeActivityDetailFragment extends Fragment implements View.
             }
         }
 
-        initializeMediaSession();
+//        initializeMediaSession();
 
         if (step != null) {
             if (step.getVideoURL() != null || !step.getVideoURL().isEmpty())
@@ -139,10 +139,11 @@ public class RecipesHomeActivityDetailFragment extends Fragment implements View.
     @Override
     public void onResume() {
         super.onResume();
-
+//
         if (mExoPlayer != null) {
             if (mediaSource != null) {
-                mExoPlayer.prepare(mediaSource);
+//                mExoPlayer.prepare(mediaSource);
+                mExoPlayer.seekTo(currentPlaybak);
             }
 
             mExoPlayer.setPlayWhenReady(true);
@@ -220,6 +221,10 @@ public class RecipesHomeActivityDetailFragment extends Fragment implements View.
                 nextStepBtn.setVisibility(View.GONE);
             }
 
+        if (savedInstanceState != null) {
+            currentPlaybak = savedInstanceState.getLong("playback_time");
+        }
+
 
         player.setPlayer(mExoPlayer);
 
@@ -227,33 +232,33 @@ public class RecipesHomeActivityDetailFragment extends Fragment implements View.
     }
 
 
-    private void initializeMediaSession() {
-
-        // Create a MediaSessionCompat.
-        mMediaSession = new MediaSessionCompat(getContext(), TAG);
-
-        // Enable callbacks from MediaButtons and TransportControls.
-        mMediaSession.setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
-        // Do not let MediaButtons restart the player when the app is not visible.
-        mMediaSession.setMediaButtonReceiver(null);
-
-        // Set an initial PlaybackState with ACTION_PLAY, so media buttons can start the player.
-        mStateBuilder = new PlaybackStateCompat.Builder()
-                .setActions(
-                        PlaybackStateCompat.ACTION_PLAY |
-                                PlaybackStateCompat.ACTION_PAUSE |
-                                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
-                                PlaybackStateCompat.ACTION_PLAY_PAUSE);
-
-        mMediaSession.setPlaybackState(mStateBuilder.build());
-
-        // Start the Media Session since the activity is active.
-        mMediaSession.setActive(true);
-
-    }
+//    private void initializeMediaSession() {
+//
+//        // Create a MediaSessionCompat.
+//        mMediaSession = new MediaSessionCompat(getContext(), TAG);
+//
+//        // Enable callbacks from MediaButtons and TransportControls.
+//        mMediaSession.setFlags(
+//                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+//                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+//
+//        // Do not let MediaButtons restart the player when the app is not visible.
+//        mMediaSession.setMediaButtonReceiver(null);
+//
+//        // Set an initial PlaybackState with ACTION_PLAY, so media buttons can start the player.
+//        mStateBuilder = new PlaybackStateCompat.Builder()
+//                .setActions(
+//                        PlaybackStateCompat.ACTION_PLAY |
+//                                PlaybackStateCompat.ACTION_PAUSE |
+//                                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
+//                                PlaybackStateCompat.ACTION_PLAY_PAUSE);
+//
+//        mMediaSession.setPlaybackState(mStateBuilder.build());
+//
+//        // Start the Media Session since the activity is active.
+//        mMediaSession.setActive(true);
+//
+//    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -284,11 +289,24 @@ public class RecipesHomeActivityDetailFragment extends Fragment implements View.
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mExoPlayer != null) {
+            currentPlaybak = mExoPlayer.getCurrentPosition();
+        }
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         if (mExoPlayer != null) {
-            currentPlaybak = mExoPlayer.getCurrentPosition();
             mExoPlayer.stop();
+        }
+
+        if (player.getVisibility() == View.VISIBLE) {
+            releasePlayer();
+//            mMediaSession.setActive(false);
         }
     }
 
@@ -297,15 +315,15 @@ public class RecipesHomeActivityDetailFragment extends Fragment implements View.
         super.onDestroy();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        if (player.getVisibility() == View.VISIBLE) {
-            releasePlayer();
-            mMediaSession.setActive(false);
-        }
-    }
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//
+//        if (player.getVisibility() == View.VISIBLE) {
+//            releasePlayer();
+//            mMediaSession.setActive(false);
+//        }
+//    }
 
     private void releasePlayer() {
         mExoPlayer.stop();
@@ -318,16 +336,16 @@ public class RecipesHomeActivityDetailFragment extends Fragment implements View.
     /**
      * Broadcast Receiver registered to receive the MEDIA_BUTTON intent coming from clients.
      */
-    public static class MediaReceiver extends BroadcastReceiver {
-
-        public MediaReceiver() {
-        }
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            MediaButtonReceiver.handleIntent(mMediaSession, intent);
-        }
-    }
+//    public static class MediaReceiver extends BroadcastReceiver {
+//
+//        public MediaReceiver() {
+//        }
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            MediaButtonReceiver.handleIntent(mMediaSession, intent);
+//        }
+//    }
 
 
     private void retriveVideoFrameFromVideo(String videoPath) throws Throwable

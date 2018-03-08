@@ -42,18 +42,17 @@
             android:name=".RecipesHomeActivityDetailActivity"
             android:label="@string/title_recipeshomeactivity_detail"
             android:parentActivityName=".RecipesHomeActivityListActivity"
-            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nanodegree.muhammadhamed.bakingapp.RecipesHomeActivityListActivity" />
         </activity>
 
-        <receiver android:name=".RecipesHomeActivityDetailFragment$MediaReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-            </intent-filter>
-        </receiver>
+        <!--<receiver android:name=".RecipesHomeActivityDetailFragment$MediaReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MEDIA_BUTTON" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
         <activity
             android:name=".IngredientsActivity"
