@@ -304,7 +304,7 @@ public class RecipesHomeActivityDetailFragment extends Fragment implements View.
             mExoPlayer.stop();
         }
 
-        if (player.getVisibility() == View.VISIBLE) {
+        if (player.getVisibility() == View.VISIBLE && mExoPlayer != null) {
             releasePlayer();
 //            mMediaSession.setActive(false);
         }
