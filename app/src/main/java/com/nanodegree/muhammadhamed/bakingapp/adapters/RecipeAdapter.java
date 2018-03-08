@@ -80,7 +80,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeCard
 
             Step step = recipe.getSteps().get(recipe.getSteps().size()-1);
 
-            if (!step.getVideoURL().isEmpty()) {
+            if (recipe.getImage() != null && !recipe.getImage().isEmpty()) {
+                url = recipe.getImage();
+            }
+
+            else if (!step.getVideoURL().isEmpty()) {
                 url = step.getVideoURL();
             } else if (!step.getThumbnailURL().isEmpty()){
                 url = step.getThumbnailURL();
@@ -88,12 +92,20 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeCard
 
             if(url.isEmpty()) holder.recipeImage.setImageResource(R.mipmap.ic_launcher);
             else {
-                try {
-                    holder.recipeImage.setImageBitmap(retriveVideoFrameFromVideo(url));
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
+
+                if (url.endsWith(".mp4")) {
+                    try {
+                        holder.recipeImage.setImageBitmap(retriveVideoFrameFromVideo(url));
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                 }
-//                loadImageOnline(mContext, holder.recipeImage, url);
+                else {
+
+                    loadImageOnline(mContext, holder.recipeImage, url);
+                }
+
+
             }
             holder.title.setText(recipe.getName());
             holder.serving.setText("Servings: "+recipe.getServings());

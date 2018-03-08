@@ -42,6 +42,7 @@
             android:name=".RecipesHomeActivityDetailActivity"
             android:label="@string/title_recipeshomeactivity_detail"
             android:parentActivityName=".RecipesHomeActivityListActivity"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
